@@ -4,22 +4,40 @@
 class ePad
 {
 	private:
-		//const unsigned int inputPinNumber; ///< 
-        //const unsigned int ledPinNumber;
-		bool hit; ///< is pad was hit?
-		byte code; ///< note number
-		byte channel; ///< channel number
-		unsigned int preassure; ///< hit force
-        unsigned long hitTime; ///< millis() 
-	public:
-        ePad() {
-            Serial.println("ePad Created");
-        }
-		ePad(byte pin, byte code, byte channel);
-		void setupPad(byte code, byte channel);
-        bool wasHit(struct Mux16 * mux, unsigned int threeshold, unsigned int afterTouchDelay);
-        //bool wasHit(const unsigned int analogPin, unsigned int threeshold, unsigned int afterTouchDelay);
-		unsigned int getPreassure(void);	///< 
-        void sendMidiNoteOn(void);
-		void clearPad(void);
+		byte code; ///< Note number.
+
+    /**
+     *  @warning: Channel is a value for both the MIDI channel 
+     *  and the multiplexer channel connected to.
+     */
+		byte channel; ///< Channel number.
+		unsigned int preassure; ///< Hit force value(mapped).
+    unsigned long hitTime; ///< Last hit time (millis()). 
+	public: 
+    /*
+     * Default constructor.
+     * @warning Use the 'setupPad' function 
+     *          to set a code and channel values.
+     */
+    ePad();
+
+    /**    
+     * Set values for pad.    
+     */
+		void setupPad(byte code, byte channel);  
+    
+    /**
+     * Is pad was hit.
+     */
+    bool wasHit(struct Mux16 * mux, unsigned int threeshold, unsigned int afterTouchDelay);
+
+    /**
+     * Get hit force value. 
+     */
+		unsigned int getPreassure(void);	
+   
+    /**
+    * Send MIDI 'Note On' command with values assigned to pad object.
+    */
+    void sendMidiNoteOn(void);
 };

@@ -10,7 +10,9 @@ unsigned int muxS3Pin = A2;
 const unsigned int DEBUG = 6;
 unsigned int NOTE = 64;
 
-
+/**
+ * Default constructor.
+ */
 eDrum::eDrum()
 {
   this->mux16.EN = muxEnablePin; 
@@ -29,38 +31,48 @@ eDrum::eDrum()
 }
 
 /**
+ * Count connected ePads.
  * 
+ * @return Number of connected ePads.
  */
 static size_t checkNumberOfConnectedPads(Mux16 * mux)
 {           
-  unsigned int i;                                                     String log = "Pads connected to channel: ";
+  unsigned int i;                                                    // String log = "Pads connected to channel: ";
   size_t numberOfPads = 0;
 
   for (i = 0; i < DEBUG; i++) {    ///< TODO: 16
     selectChannel(mux, i);
-    if (digitalRead(mux->SIG)) {                                      log += i;
-      numberOfPads++;                                                 log += ',';                           
+    if (digitalRead(mux->SIG)) {                                     // log += i;
+      numberOfPads++;                                                // log += ',';                           
     }
-  }                                                                   Serial.println(log); 
-  return numberOfPads;                                                log = "Connected pads: " + numberOfPads; Serial.println(log);                                  
+  }                                                                  // Serial.println(log); 
+  return numberOfPads;                                               // log = "Connected pads: " + numberOfPads; Serial.println(log);                                  
 }
 
+/**
+ * Set initial values to connected ePads.
+ * 
+ * @param mux Pointer to multiplekser structure.
+ */
 bool eDrum::setupPads(Mux16 * mux)
 { 
   this->numberOfPads = DEBUG;     ////TODO:<< !!!checkNumberOfConnectedPads(mux);
   this->drums = new ePad[this->numberOfPads];
-                                                                       String log = "Pads setup: "; 
-  if (this->drums == nullptr) {                                        log += " Problem with memory allocation... :/";
+                                                                      // String log = "Pads setup: "; 
+  if (this->drums == nullptr) {                                       // log += " Problem with memory allocation... :/";
     return false;
-  } else {                                                             log += "OK :)";    
+  } else {                                                            // log += "OK :)";    
     unsigned int i; 
     for (i = 0; i < this->numberOfPads; i++) {   ///<<< TODO DEBUG
       this->drums[i].setupPad(NOTE, i); 
     }
-  }                                                                    Serial.print(log);
+  }                                                                   // Serial.print(log);
   return true;
 }
 
+/**
+ * Checking if any drum pad was hit.
+ */
 void eDrum::pollingAllPads(void)
 {
   unsigned int i;
@@ -73,7 +85,11 @@ void eDrum::pollingAllPads(void)
   }
 }
 
-eDrum::~eDrum()  ///< TODO: disable Mux, LCD Bye
+/**
+ * Default destruktor.
+ */
+eDrum::~eDrum()  
 {
+  /* TODO: disable Mux, LCD Bye */
   disableChip(&mux16);
 }

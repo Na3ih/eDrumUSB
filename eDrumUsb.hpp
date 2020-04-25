@@ -14,22 +14,35 @@
 */
 
 /**
- * !!! Podlaczac do nieparzystych piezo, a do parzystych "czujnik". 
+ * TODO: !!! Zrobic drugi mux do wykrywania wpietyych jackow i funkcje do zapamietania numerow
  */
   
 class eDrum
 {
-    unsigned int threeshold;
-    unsigned int afterTouchDelay;
-    Mux16 mux16;
-    size_t numberOfPads;
-    ePad * drums; // wskaznik na tablice bebnaw
-    bool setupPads(Mux16 * mux);
+    unsigned int threeshold; ///< Impact threshold. 
+    unsigned int afterTouchDelay; ///< Minimal delay betwen impacts. 
+    Mux16 mux16; ///< CD74HC4067 multuiplekser structure.
+    size_t numberOfPads; ///< Number of connected ePads.
+    ePad * drums; ///< Pointer to ePads table;
+    
+    /**
+     * Set initial values to connected ePads.
+     */
+    bool setupPads(Mux16 * mux);   
     
     public:
+    /**
+     * Default constructor.
+     */
     eDrum();
+    
+    /**
+     * Checking if any drum pad was hit.
+     */
     void pollingAllPads(void);
-    //void noteOn(byte channel, byte pitch, byte velocity);
-    void refresh(void);
-    ~eDrum();  //disable Mux, LCD Bye
+
+    /*
+     * Object destructor.  
+     */
+    ~eDrum();
 };

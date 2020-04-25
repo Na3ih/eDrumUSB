@@ -3,47 +3,52 @@
 #include <CD74HC4067.hpp>
 #include <MIDIUSB.h>
 
-/**
-* eDrum class constructor.
-* @param pin	 Arduino pin attached to pad number (for preassure detection should be analog pin)
-* @param code	 MIDI code (note) number
-* @param channel MIDI channel number
-*/
-ePad::ePad(byte pin, byte code, byte channel)
-{
-	//this->pinNumber = pin;
-	this->code = code;
-	this->channel = channel;
-	//pinMode(INPUT, this->pinNumber);	///< return?
-	
-	Serial.println("Create Object ...");
-	Serial.print("Attached to pin ");
-	//Serial.println(this->pinNumber);
-	Serial.print("MIDI code: ");
-	Serial.print(this->code);
-	Serial.print("MIDI channel: ");
-	Serial.println(this->channel);
-	Serial.print("Created");
+/*
+ * Default constructor.
+ * @warning Use the 'setupPad' function 
+ *          to set a code and channel values.
+ */
+ePad::ePad()
+{ 
+  this->code = 0; 
+  this->channel = 0; 
+  this->preassure = 0; 
+  this->hitTime = 0; 
 }
 
+/**
+ * Set values for pad.
+ * @param note    Note number
+ * @param channel Channel number
+ * @return None
+ */
 void ePad::setupPad(byte note, byte channel)
-{
-    this->hit = false; 
+{ 
 	this->code = note; 
 	this->channel = channel; 
-	this->preassure = 0; 
-    this->hitTime = 0; 
 }
 
+/**
+ * @brief Is pad was hit.
+ * 
+ * @description
+ * If pad was hit with force greather than threeshold and after delay time
+ * measured values will be assigned to object fields.
+ * 
+ * @param  mux Pointer to multiplekser structure.
+ * @param  threeshold Impact threshold. 
+ * @param  afterTouchDelay Minimal delay betwen impacts.   
+ * @retval true  Pad was hit.
+ *         false Pad wasn't hit.
+ */
 bool ePad::wasHit(struct Mux16 * mux, unsigned int threeshold, unsigned int afterTouchDelay) {
     selectChannel(mux, this->channel);
     unsigned long actualTime = millis();
-    if (actualTime > this->hitTime + afterTouchDelay) { ///<<TODO hit
+    if (actualTime > this->hitTime + afterTouchDelay) {
         unsigned int force = analogRead(mux->SIG); 
         if (force > threeshold) {
             this->preassure = map(force, 0, 1024, 0, 127);
             this->hitTime = actualTime;
-           // digitalWrite(this->ledPinNumber, HIGH);   ///< TODO LCD?
             return true;
         }
         else {
@@ -55,18 +60,23 @@ bool ePad::wasHit(struct Mux16 * mux, unsigned int threeshold, unsigned int afte
     }
 }
 
+/**
+ * Get hit force value. 
+ * 
+ * @return Mapped last impact force value.
+ */
 unsigned int ePad::getPreassure(void) {
     return this->preassure;
 }
 
+/**
+ * Send MIDI Note On command with values assigned to pad object.
+ */
 void ePad::sendMidiNoteOn(void)
-{
-  midiEventPacket_t noteOn = {0x09, 0x90 | (uint8_t)this->channel, (uint8_t)this->code, (uint8_t)this->getPreassure()}; ///< NOTE: numer 0 tu = 1 w FLu
+{ /**
+    NOTE: Number 0 here = 1 in FL Studio! 
+  */
+  midiEventPacket_t noteOn = {0x09, 0x90 | (uint8_t)this->channel, (uint8_t)this->code, (uint8_t)this->getPreassure()}; 
   MidiUSB.sendMIDI(noteOn);
   MidiUSB.flush();
-}
-
-void ePad::clearPad(void) {
-    this->preassure = 0;
-    this->hit = false;
 }
