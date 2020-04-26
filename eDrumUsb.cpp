@@ -15,7 +15,7 @@ eDrum::eDrum()
 
   pinoutSetup(&(this->mux16));
   enableChip(&(this->mux16));
-  this->numberOfPads = setupPads(&(this->mux16));
+  setupPads(&(this->mux16));
 
   this->threeshold = THREESHOLD;
   this->afterTouchDelay = AFTER_TOUCH_DELAY;
