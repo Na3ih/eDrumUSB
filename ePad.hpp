@@ -1,6 +1,12 @@
 #pragma once
 #include <Arduino.h>
 
+/**
+ * Class represent a single electronic pad (piezoelectric transducer)
+ * connected to 16 channels multiplekser with CD74HC4067 chip.
+ * 
+ * 
+ */
 class ePad
 {
 	private:

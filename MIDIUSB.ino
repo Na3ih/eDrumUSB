@@ -1,10 +1,13 @@
 /**
  * Main function realized MIDI eDrum functionality.
  * 
- * Project use a Arduino board with native USB capabilities (Arduino Micro in this case).\ 
+ * Project use a Arduino board with native USB capabilities (Arduino Micro in this case). 
  * Code is based on MIDIUSB library (by gurbrinder grewal).
  * 
- * ePads are connected to 16 channels multiplekser with CD74HC4067 chip. 
+ * Board is recognized by the PC as MIDI device what allows communication with software 
+ * like Fruity Loops Studio.
+ *
+ * 
  */
 #include <Arduino.h>
 #include "eDrumUsb.hpp"

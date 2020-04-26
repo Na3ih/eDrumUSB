@@ -7,16 +7,21 @@
 /**
  * TODO:
  * 1. Konstruktor dla eDrum (jeden z mux, drugi dla analogPin?)
+ * 2. drugi mux do wykrywania wpietyych jackow i funkcje do zapamietania numerow
  * 4. Enkoder 
  * 5. Tests
  * 6. Doxygen
  * 7.LCD 
+ * 8. README
 */
 
+
 /**
- * TODO: !!! Zrobic drugi mux do wykrywania wpietyych jackow i funkcje do zapamietania numerow
+ * Class represents a electronic drum. 
+ * Allows connecting up to 16 Pads through CD74HC4067 chip multiplekser. 
+ * 
+ * 
  */
-  
 class eDrum
 {
     unsigned int threeshold; ///< Impact threshold. 

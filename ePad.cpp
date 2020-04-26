@@ -18,9 +18,9 @@ ePad::ePad()
 
 /**
  * Set values for pad.
- * @param note    Note number
- * @param channel Channel number
- * @return None
+ * @param note    Note number.
+ * @param channel Channel number.
+ * @return None.
  */
 void ePad::setupPad(byte note, byte channel)
 { 
